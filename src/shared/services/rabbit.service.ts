@@ -37,7 +37,7 @@ export class RabbitMQService implements OnModuleInit {
 
     sendQueueMessage = async (message: string, data: any) => {
         try {
-            const connection = await amqp.connect("amqp://guest:guest@localhost:5672")
+            const connection = await amqp.connect(process.env.RABBIT_MQ_CONNECTION_URL)
             const channel = await connection.createChannel()
             const assertion = await channel.assertQueue(message)
             channel.sendToQueue(message, Buffer.from(JSON.stringify(data)))

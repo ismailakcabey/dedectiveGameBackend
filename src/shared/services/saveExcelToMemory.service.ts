@@ -4,7 +4,7 @@ import * as PATH from 'path'
 import * as fs from 'fs';
 
 @Injectable()
-export class SaveExcelMemory {
+export class SaveExcelMemoryService {
 
     constructor(
     ){}

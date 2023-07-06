@@ -7,12 +7,12 @@ import { UserTable } from './modules/user/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { redisStore } from 'cache-manager-redis-store';
 import { UserModule } from './modules/user/user.module';
-import { RabbitMQService } from './shared/services/rabbit.service';
-import { EmailService } from './shared/services/email.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { IpBlockMiddleware } from './middlewares/ipBlock.middleware';
 import { UserController } from './modules/user/user.controller';
 import { AuthController } from './modules/auth/auth.controller';
+import { EventTable } from './modules/event/event.entity';
+import { EventModule } from './modules/event/event.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
@@ -36,6 +36,7 @@ import { AuthController } from './modules/auth/auth.controller';
         database: configService.get('DB_NAME'),
         entities: [
           UserTable,
+          EventTable
         ],
         synchronize: true,
       }),
@@ -56,7 +57,8 @@ import { AuthController } from './modules/auth/auth.controller';
       inject: [ConfigService],
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    EventModule
   ],
   controllers: [AppController],
   providers: [
