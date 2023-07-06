@@ -18,7 +18,7 @@ export class EventService implements IEventService {
     async createEvent(event: EventDto): Promise<EventTable> {
         const newEvent = await this.eventRepository.create(event);
         newEvent.createdAt = new Date
-        const filePath = await this.saveImager.imageSaver(newEvent.imageBase64, newEvent.name)
+        const filePath = await this.saveImager.imageSaver(event.imageBase64, newEvent.name)
         newEvent.imageUrl = filePath;
         return await this.eventRepository.save(newEvent);
     }

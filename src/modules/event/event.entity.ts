@@ -21,12 +21,6 @@ export class EventTable extends BaseEntity{
         type: 'varchar',
         nullable: true
     })
-    imageBase64: string// base64 encoded
-
-    @Column({
-        type: 'varchar',
-        nullable: true
-    })
     imageUrl: string
 
     @Column({
