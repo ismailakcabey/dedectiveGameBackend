@@ -13,6 +13,8 @@ import { UserController } from './modules/user/user.controller';
 import { AuthController } from './modules/auth/auth.controller';
 import { EventTable } from './modules/event/event.entity';
 import { EventModule } from './modules/event/event.module';
+import { ExpressionTable } from './modules/expression/expression.entity';
+import { ExpressionModule } from './modules/expression/expression.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
@@ -36,7 +38,8 @@ import { EventModule } from './modules/event/event.module';
         database: configService.get('DB_NAME'),
         entities: [
           UserTable,
-          EventTable
+          EventTable,
+          ExpressionTable
         ],
         synchronize: true,
       }),
@@ -58,7 +61,8 @@ import { EventModule } from './modules/event/event.module';
     }),
     UserModule,
     AuthModule,
-    EventModule
+    EventModule,
+    ExpressionModule
   ],
   controllers: [AppController],
   providers: [

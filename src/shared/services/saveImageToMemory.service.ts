@@ -5,7 +5,11 @@ import * as path from 'path';
 @Injectable()
 export class SaveImageMemoryService {
     async imageSaver(base64Data: string, imageName: string): Promise<string> {
-        imageName = imageName.replace(" ","+")
+        try {
+            imageName = imageName.replace(" ","+")
+        } catch (error) {
+            
+        }
         const base64Image = base64Data.split(';base64,').pop();
         const assetsPath = path.resolve(__dirname, '..', 'assets');
         const date = new Date
