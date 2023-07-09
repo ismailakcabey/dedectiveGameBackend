@@ -15,6 +15,8 @@ import { EventTable } from './modules/event/event.entity';
 import { EventModule } from './modules/event/event.module';
 import { ExpressionTable } from './modules/expression/expression.entity';
 import { ExpressionModule } from './modules/expression/expression.module';
+import { ClueModule } from './modules/clue/clue.module';
+import { ClueTable } from './modules/clue/clue.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
@@ -39,7 +41,8 @@ import { ExpressionModule } from './modules/expression/expression.module';
         entities: [
           UserTable,
           EventTable,
-          ExpressionTable
+          ExpressionTable,
+          ClueTable
         ],
         synchronize: true,
       }),
@@ -62,7 +65,8 @@ import { ExpressionModule } from './modules/expression/expression.module';
     UserModule,
     AuthModule,
     EventModule,
-    ExpressionModule
+    ExpressionModule,
+    ClueModule
   ],
   controllers: [AppController],
   providers: [
