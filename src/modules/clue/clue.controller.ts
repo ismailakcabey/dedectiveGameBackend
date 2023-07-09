@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
 import { Roles } from "../auth/roles.decorator";
 import { Role } from "../user/user.enum";
@@ -6,7 +6,7 @@ import { ClueService } from "./clue.service";
 import { ClueDto } from "./clue.dto";
 import { ClueTable } from "./clue.entity";
 import { FilterQuery } from "src/shared/dtos/query.dto";
-
+import { Request } from 'express'
 @UseGuards(AuthGuard)
 @Roles(Role.ADMIN, Role.USER)
 @Controller('clue')
@@ -18,14 +18,17 @@ export class ClueController{
 
     @Post()
     async createClue(
-        @Body() clue: ClueDto
+        @Body() clue: ClueDto,
+        @Req() request: Request
     ):Promise<ClueTable>{
-        return this.clueService.createClue(clue)
+        //@ts-ignore
+        const authenticatedUserId = request?.user?.id
+        return this.clueService.createClue(clue,authenticatedUserId)
     }
 
     @Get()
     async findClue(
-        @Query() clue: FilterQuery
+        @Query() clue: FilterQuery,
     ):Promise<{
         data:ClueTable[],
         count:number
@@ -50,9 +53,12 @@ export class ClueController{
     @Patch(':id')
     async updateClue(
         @Param('id') id:number,
-        @Body() clue:ClueDto
+        @Body() clue:ClueDto,
+        @Req() request: Request
     ):Promise<ClueTable>{
-        return await this.clueService.updateClue(id, clue)
+        //@ts-ignore
+        const authenticatedUserId = request?.user?.id
+        return await this.clueService.updateClue(id, clue,authenticatedUserId)
     }
     
 }

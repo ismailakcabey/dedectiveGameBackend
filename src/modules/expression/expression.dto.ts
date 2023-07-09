@@ -62,10 +62,6 @@ export class ExpressionDto {
 
     @IsOptional()
     @IsNumber()
-    createdUser?: UserTable;
-
-    @IsOptional()
-    @IsNumber()
     event?: EventTable;
 
 }

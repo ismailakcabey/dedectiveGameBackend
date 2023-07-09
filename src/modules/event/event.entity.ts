@@ -35,8 +35,6 @@ export class EventTable extends BaseEntity{
     })
     news: string
 
-    @ManyToOne(() => UserTable, user => user.id)
-    @JoinColumn({ name: 'user_id' })
-    user: UserTable;
+
 
 }

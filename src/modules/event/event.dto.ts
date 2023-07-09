@@ -23,8 +23,5 @@ export class EventDto {
     @IsString()
     news?: string;
 
-    @IsOptional()
-    @IsNumber()
-    user?: UserTable;
 
 }

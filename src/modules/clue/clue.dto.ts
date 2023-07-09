@@ -18,10 +18,6 @@ export class ClueDto{
 
     @IsOptional()
     @IsNumber()
-    createdUser?: UserTable;
-
-    @IsOptional()
-    @IsNumber()
     event?: EventTable;
 
 }

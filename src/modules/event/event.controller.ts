@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Query, UseGuards, Get, Param, Patch, Delete } from "@nestjs/common";
+import { Body, Controller, Post, Query, UseGuards, Get, Param, Patch, Delete, Req } from "@nestjs/common";
 import { EventService } from "./event.service";
 import { EventDto } from "./event.dto";
 import { EventTable } from "./event.entity";
@@ -6,7 +6,7 @@ import { AuthGuard } from "../auth/auth.guard";
 import { Roles } from "../auth/roles.decorator";
 import { Role } from "../user/user.enum";
 import { FilterQuery } from "src/shared/dtos/query.dto";
-
+import { Request } from 'express'
 
 @UseGuards(AuthGuard)
 @Roles(Role.ADMIN,Role.USER)
@@ -19,9 +19,12 @@ export class EventController{
 
     @Post()
     async createEvent(
-        @Body() event: EventDto
+        @Body() event: EventDto,
+        @Req() request: Request
     ):Promise<EventTable>{
-        return this.eventService.createEvent(event)
+        //@ts-ignore
+        const authenticatedUserId = request?.user?.id
+        return this.eventService.createEvent(event,authenticatedUserId)
     }
 
     @Get()
@@ -44,9 +47,12 @@ export class EventController{
     @Patch(':id')
     async updateEventById(
         @Param('id') id: number,
-        @Body() event: EventDto
+        @Body() event: EventDto,
+        @Req() request: Request
     ): Promise<EventTable>{
-        return this.eventService.updateEvent(event, id)
+        //@ts-ignore
+        const authenticatedUserId = request?.user?.id
+        return this.eventService.updateEvent(event, id,authenticatedUserId)
     }
 
     @Delete(':id')

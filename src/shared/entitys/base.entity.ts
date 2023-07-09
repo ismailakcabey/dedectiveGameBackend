@@ -1,4 +1,5 @@
-import { Column , Entity } from 'typeorm'
+import { UserTable } from 'src/modules/user/user.entity';
+import { Column , Entity, JoinColumn, ManyToOne } from 'typeorm'
 
 @Entity()
 export class BaseEntity {
@@ -15,5 +16,13 @@ export class BaseEntity {
         nullable: true
     })
     updatedAt:Date
+
+    @ManyToOne(() => UserTable, user => user.id)
+    @JoinColumn({ name: 'updated_user_id' })
+    updatedUser: number;
+
+    @ManyToOne(() => UserTable, user => user.id)
+    @JoinColumn({ name: 'created_user_id' })
+    createdUser: number;
 
 }

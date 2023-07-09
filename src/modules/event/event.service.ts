@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { IEventService } from "./event.interface";
 import { FilterQuery, QueryDto } from "src/shared/dtos/query.dto";
 import { EventDto } from "./event.dto";
@@ -15,11 +15,12 @@ export class EventService implements IEventService {
         private readonly saveImager:SaveImageMemoryService
     ) { }
 
-    async createEvent(event: EventDto): Promise<EventTable> {
+    async createEvent(event: EventDto,authenticatedUserId:string): Promise<EventTable> {
         const newEvent = await this.eventRepository.create(event);
         newEvent.createdAt = new Date
         const filePath = await this.saveImager.imageSaver(event.imageBase64, newEvent.name)
         newEvent.imageUrl = filePath;
+        newEvent.createdUser = parseInt(authenticatedUserId)
         return await this.eventRepository.save(newEvent);
     }
 
@@ -43,11 +44,13 @@ export class EventService implements IEventService {
         else throw new NotFoundException("No event found")
     }
 
-    async updateEvent(event: EventDto, id: number): Promise<EventTable> {
+    async updateEvent(event: EventDto, id: number,authenticatedUserId:string): Promise<EventTable> {
         const eventData = await this.eventRepository.findOne({ where: { id: id } })
         if (eventData) {
             Object.assign(eventData, event)
             eventData.updatedAt = new Date
+            eventData.updatedUser = parseInt(authenticatedUserId)
+            if(eventData.updatedUser != eventData.createdUser) throw new UnauthorizedException("this user is unauthorized in this game ")
             const newEvent = await this.eventRepository.save(eventData)
             return newEvent
         }

@@ -77,9 +77,7 @@ export class ExpressionTable extends BaseEntity{
     })
     imageUrl?: string
 
-    @ManyToOne(() => UserTable, user => user.id)
-    @JoinColumn({ name: 'user_id' })
-    createdUser: UserTable;
+
 
     @ManyToOne(() => EventTable, event => event.id)
     @JoinColumn({ name: 'event_id' })

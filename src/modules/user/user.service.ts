@@ -51,11 +51,12 @@ export class UserService implements IUserService {
 
     }
 
-    async updateUser(user: UserDto, id: number): Promise<UserTable> {
+    async updateUser(user: UserDto, id: number,authenticatedUserId:string): Promise<UserTable> {
         const updatedUser = await this.userRepository.findOne({ where: { id: id } })
         if (updatedUser) {
             Object.assign(updatedUser, user)
             updatedUser.updatedAt = new Date
+            updatedUser.updatedUser = parseInt(authenticatedUserId)
             return await this.userRepository.save(updatedUser)
         }
         else {

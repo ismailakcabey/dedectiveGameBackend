@@ -8,6 +8,6 @@ export interface IUserService{
         count:number
     }>;
     findUserById(id:number):Promise<UserTable>;
-    updateUser(user:UserDto,id:number):Promise<UserTable>;
+    updateUser(user:UserDto,id:number,authenticatedUserId:string):Promise<UserTable>;
     deleteUser(id:number):Promise<boolean>;
 }

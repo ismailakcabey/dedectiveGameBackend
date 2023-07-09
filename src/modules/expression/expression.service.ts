@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { IExpressionService } from "./expression.interface";
 import { FilterQuery, QueryDto } from "src/shared/dtos/query.dto";
 import { ExpressionDto } from "./expression.dto";
@@ -17,11 +17,12 @@ export class ExpressionService implements IExpressionService{
         private readonly saveImager:SaveImageMemoryService
     ){}
 
-    async createExpression(expression: ExpressionDto): Promise<ExpressionTable> {
+    async createExpression(expression: ExpressionDto,authenticatedUserId:string): Promise<ExpressionTable> {
         const newExpression = await this.expressionRepository.create(expression)
         newExpression.createdAt = new Date()
         const filePath = await this.saveImager.imageSaver(expression.imageBase64,newExpression.personName)
         newExpression.imageUrl= filePath
+        newExpression.createdUser = parseInt(authenticatedUserId)
         return await this.expressionRepository.save(newExpression)
     }
 
@@ -53,11 +54,13 @@ export class ExpressionService implements IExpressionService{
         else throw new NotFoundException("Expression not found")
     }
 
-    async updateExpression(id: number, expression: ExpressionDto): Promise<ExpressionTable> {
+    async updateExpression(id: number, expression: ExpressionDto,authenticatedUserId:string): Promise<ExpressionTable> {
         const expressionData = await this.expressionRepository.findOne({where:{id:id}})
         if(expressionData){
             Object.assign(expressionData, expression)
             expressionData.updatedAt = new Date()
+            expressionData.updatedUser = parseInt(authenticatedUserId)
+            if(expressionData.updatedUser != expressionData.createdUser) throw new UnauthorizedException("this user is unauthorized in this game ")
             return await this.expressionRepository.save(expressionData)
         }
         else throw new NotFoundException("Expression not found")

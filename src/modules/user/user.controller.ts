@@ -18,6 +18,7 @@ import { FilterQuery } from 'src/shared/dtos/query.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { Roles } from '../auth/roles.decorator';
 import { Role } from './user.enum';
+import { Request } from 'express'
 
 @Controller('user')
 export class UserController {
@@ -58,9 +59,12 @@ export class UserController {
     @Roles(Role.ADMIN,Role.USER)
     async updateUser(
         @Param('id') id: number,
-        @Body() user: UserDto
+        @Body() user: UserDto,
+        @Req() request: Request
     ): Promise<UserTable> {
-        return this.userService.updateUser(user, id)
+         //@ts-ignore
+         const authenticatedUserId = request?.user?.id
+        return this.userService.updateUser(user, id,authenticatedUserId)
     }
 
     @Delete(':id')
