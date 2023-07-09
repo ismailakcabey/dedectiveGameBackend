@@ -6,6 +6,7 @@ import { ClueTable } from "./clue.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { SaveImageMemoryService } from "src/shared/services/saveImageToMemory.service";
+import { UnAuthGameUpdate } from "src/shared/exception/unAtuhGameUpdate.exception";
 
 @Injectable()
 export class ClueService implements IClueService {
@@ -39,10 +40,14 @@ export class ClueService implements IClueService {
         }
     }
 
-    findClueById(id: number): Promise<ClueTable> {
-        const clue = this.clueRepository.findOne({where:{id:id}})
-        if(clue) return clue
-        else throw new NotFoundException("Clue not found")
+    async findClueById(id: number): Promise<ClueTable> {
+        const clue = await this.clueRepository.findOne({where:{id:id}})
+        if(clue == null){
+            throw new NotFoundException("Clue not found")
+        } 
+        else {
+            return clue
+        }
     }
 
     async deleteClue(id: number): Promise<boolean> {
@@ -60,7 +65,7 @@ export class ClueService implements IClueService {
             Object.assign(clueData, clue)
             clueData.updatedAt = new Date()
             clueData.updatedUser = parseInt(authenticatedUserId)
-            if(clueData.updatedUser != clueData.createdUser) throw new UnauthorizedException("this user is unauthorized in this game ")
+            if(clueData.updatedUser != clueData.createdUser) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
             return await this.clueRepository.save(clueData)
         }
         else throw new NotFoundException("Clue not found")

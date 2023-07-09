@@ -6,6 +6,7 @@ import { EventTable } from "./event.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { SaveImageMemoryService } from "src/shared/services/saveImageToMemory.service";
+import { UnAuthGameUpdate } from "src/shared/exception/unAtuhGameUpdate.exception";
 
 @Injectable()
 export class EventService implements IEventService {
@@ -50,7 +51,7 @@ export class EventService implements IEventService {
             Object.assign(eventData, event)
             eventData.updatedAt = new Date
             eventData.updatedUser = parseInt(authenticatedUserId)
-            if(eventData.updatedUser != eventData.createdUser) throw new UnauthorizedException("this user is unauthorized in this game ")
+            if(eventData.updatedUser != eventData.createdUser) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
             const newEvent = await this.eventRepository.save(eventData)
             return newEvent
         }

@@ -6,6 +6,7 @@ import { ExpressionTable } from "./expression.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { SaveImageMemoryService } from "src/shared/services/saveImageToMemory.service";
+import { UnAuthGameUpdate } from "src/shared/exception/unAtuhGameUpdate.exception";
 
 
 @Injectable()
@@ -39,10 +40,15 @@ export class ExpressionService implements IExpressionService{
         }
     }
 
-    findExpressionById(id: number): Promise<ExpressionTable> {
-        const expression = this.expressionRepository.findOne({where:{id:id}})
-        if(expression) return expression
-        else throw new NotFoundException("Expression not found")
+    async findExpressionById(id: number): Promise<ExpressionTable> {
+        const expression = await this.expressionRepository.findOne({where:{id:id}})
+        console.log("burada")
+        if(expression == null){
+            throw new NotFoundException("Expression not found")
+        }else{
+        return expression
+        }
+        
     }
 
     async deleteExpression(id: number): Promise<boolean> {
@@ -60,7 +66,7 @@ export class ExpressionService implements IExpressionService{
             Object.assign(expressionData, expression)
             expressionData.updatedAt = new Date()
             expressionData.updatedUser = parseInt(authenticatedUserId)
-            if(expressionData.updatedUser != expressionData.createdUser) throw new UnauthorizedException("this user is unauthorized in this game ")
+            if(expressionData.updatedUser != expressionData.createdUser) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
             return await this.expressionRepository.save(expressionData)
         }
         else throw new NotFoundException("Expression not found")
