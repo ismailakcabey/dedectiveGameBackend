@@ -6,18 +6,21 @@ import { MessageTable } from "./message.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { UnAuthGameUpdate } from "src/shared/exception/unAtuhGameUpdate.exception";
+import { UserTable } from "../user/user.entity";
 
 @Injectable()
 export class MessageService implements IMessageService{
     
     constructor(
-        @InjectRepository(MessageTable) private readonly messageRepository: Repository<MessageTable>
+        @InjectRepository(MessageTable) private readonly messageRepository: Repository<MessageTable>,
+        @InjectRepository(UserTable) private readonly userRepository: Repository<UserTable>,
     ){}
 
     async createMessage(message: MessageDto, authenticatedUserId: string): Promise<MessageTable> {
         const newMessage = await this.messageRepository.create(message);
         newMessage.createdAt = new Date()
-        newMessage.createdUser = parseInt(authenticatedUserId)
+        const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
+        newMessage.createdUser = user
         return await this.messageRepository.save(newMessage);
     }
 
@@ -62,7 +65,8 @@ export class MessageService implements IMessageService{
         }
         else{
             Object.assign(messageData,message)
-            messageData.updatedUser= parseInt(authenticatedUserId)
+            const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
+            messageData.updatedUser= user
             messageData.updatedAt = new Date()
             if(messageData.createdUser != messageData.updatedUser) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
             return await this.messageRepository.save(messageData)

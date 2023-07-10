@@ -7,6 +7,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { SaveImageMemoryService } from "src/shared/services/saveImageToMemory.service";
 import { UnAuthGameUpdate } from "src/shared/exception/unAtuhGameUpdate.exception";
+import { UserTable } from "../user/user.entity";
 
 
 @Injectable()
@@ -15,6 +16,7 @@ export class ExpressionService implements IExpressionService{
 
     constructor(
         @InjectRepository(ExpressionTable) private readonly expressionRepository:Repository<ExpressionTable>,
+        @InjectRepository(UserTable) private readonly userRepository: Repository<UserTable>,
         private readonly saveImager:SaveImageMemoryService
     ){}
 
@@ -23,7 +25,8 @@ export class ExpressionService implements IExpressionService{
         newExpression.createdAt = new Date()
         const filePath = await this.saveImager.imageSaver(expression.imageBase64,newExpression.personName)
         newExpression.imageUrl= filePath
-        newExpression.createdUser = parseInt(authenticatedUserId)
+        const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
+        newExpression.createdUser = user
         return await this.expressionRepository.save(newExpression)
     }
 
@@ -65,7 +68,8 @@ export class ExpressionService implements IExpressionService{
         if(expressionData){
             Object.assign(expressionData, expression)
             expressionData.updatedAt = new Date()
-            expressionData.updatedUser = parseInt(authenticatedUserId)
+            const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
+            expressionData.updatedUser = user
             if(expressionData.updatedUser != expressionData.createdUser) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
             return await this.expressionRepository.save(expressionData)
         }

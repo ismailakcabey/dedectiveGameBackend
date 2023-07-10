@@ -7,19 +7,22 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { SaveImageMemoryService } from "src/shared/services/saveImageToMemory.service";
 import { UnAuthGameUpdate } from "src/shared/exception/unAtuhGameUpdate.exception";
+import { UserTable } from "../user/user.entity";
 
 @Injectable()
 export class ClueService implements IClueService {
 
     constructor(
         @InjectRepository(ClueTable) private readonly clueRepository: Repository<ClueTable>,
+        @InjectRepository(UserTable) private readonly userRepository: Repository<UserTable>,
         private readonly saveImager:SaveImageMemoryService
     ){}
 
     async createClue(clue: ClueDto,authenticatedUserId:string): Promise<ClueTable> {
         const newClue = await this.clueRepository.create(clue)
         newClue.createdAt = new Date()
-        newClue.createdUser = parseInt(authenticatedUserId)
+        const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
+        newClue.createdUser = user
         const filePath = await this.saveImager.imageSaver(clue.imageBase64,newClue.name)
         newClue.imageUrl = filePath
         return await this.clueRepository.save(newClue)
@@ -62,7 +65,8 @@ export class ClueService implements IClueService {
         if(clueData){
             Object.assign(clueData, clue)
             clueData.updatedAt = new Date()
-            clueData.updatedUser = parseInt(authenticatedUserId)
+            const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
+            clueData.updatedUser = user
             if(clueData.updatedUser != clueData.createdUser) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
             return await this.clueRepository.save(clueData)
         }

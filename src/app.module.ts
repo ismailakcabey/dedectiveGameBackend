@@ -21,6 +21,8 @@ import { CardExtraTable } from './modules/cardExtra/cardExtra.entity';
 import { CardExtraModule } from './modules/cardExtra/cardExtra.module';
 import { MessageTable } from './modules/message/message.entity';
 import { MessageModule } from './modules/message/message.module';
+import { TeamModule } from './modules/team/team.module';
+import { TeamTable } from './modules/team/team.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
@@ -48,7 +50,8 @@ import { MessageModule } from './modules/message/message.module';
           ExpressionTable,
           ClueTable,
           CardExtraTable,
-          MessageTable
+          MessageTable,
+          TeamTable
         ],
         synchronize: true,
       }),
@@ -74,7 +77,8 @@ import { MessageModule } from './modules/message/message.module';
     ExpressionModule,
     ClueModule,
     CardExtraModule,
-    MessageModule
+    MessageModule,
+    TeamModule
   ],
   controllers: [AppController],
   providers: [

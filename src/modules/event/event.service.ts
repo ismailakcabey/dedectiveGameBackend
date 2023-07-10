@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { IEventService } from "./event.interface";
 import { FilterQuery, QueryDto } from "src/shared/dtos/query.dto";
 import { EventDto } from "./event.dto";
@@ -7,12 +7,14 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { SaveImageMemoryService } from "src/shared/services/saveImageToMemory.service";
 import { UnAuthGameUpdate } from "src/shared/exception/unAtuhGameUpdate.exception";
+import { UserTable } from "../user/user.entity";
 
 @Injectable()
 export class EventService implements IEventService {
 
     constructor(
         @InjectRepository(EventTable) private readonly eventRepository: Repository<EventTable>,
+        @InjectRepository(UserTable) private readonly userRepository: Repository<UserTable>,
         private readonly saveImager:SaveImageMemoryService
     ) { }
 
@@ -21,7 +23,8 @@ export class EventService implements IEventService {
         newEvent.createdAt = new Date
         const filePath = await this.saveImager.imageSaver(event.imageBase64, newEvent.name)
         newEvent.imageUrl = filePath;
-        newEvent.createdUser = parseInt(authenticatedUserId)
+        const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
+        newEvent.createdUser = user
         return await this.eventRepository.save(newEvent);
     }
 
@@ -50,7 +53,8 @@ export class EventService implements IEventService {
         if (eventData) {
             Object.assign(eventData, event)
             eventData.updatedAt = new Date
-            eventData.updatedUser = parseInt(authenticatedUserId)
+            const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
+            eventData.updatedUser = user
             if(eventData.updatedUser != eventData.createdUser) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
             const newEvent = await this.eventRepository.save(eventData)
             return newEvent

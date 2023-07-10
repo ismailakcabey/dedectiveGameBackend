@@ -6,17 +6,20 @@ import { CardExtraTable } from "./cardExtra.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { UnAuthGameUpdate } from "src/shared/exception/unAtuhGameUpdate.exception";
+import { UserTable } from "../user/user.entity";
 
 @Injectable()
 export class CardExtraService implements ICardExtraInterface{
 
     constructor(
-        @InjectRepository(CardExtraTable) private readonly cardExtraRepository: Repository<CardExtraTable>
+        @InjectRepository(CardExtraTable) private readonly cardExtraRepository: Repository<CardExtraTable>,
+        @InjectRepository(UserTable) private readonly userRepository: Repository<UserTable>,
     ){}
 
     async createCardExtra(cardExtra: CardExtraDto, authenticatedUserId: string): Promise<CardExtraTable> {
         const newCardExtra = await this.cardExtraRepository.create(cardExtra);
-        newCardExtra.createdUser = parseInt(authenticatedUserId);
+        const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
+        newCardExtra.createdUser = user
         newCardExtra.createdAt = new Date()
         return await this.cardExtraRepository.save(newCardExtra)
     }
@@ -63,7 +66,8 @@ export class CardExtraService implements ICardExtraInterface{
         else{
             Object.assign(cardExtraData, cardExtra)
             cardExtraData.updatedAt = new Date()
-            cardExtraData.updatedUser = parseInt(authenticatedUserId)
+            const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
+            cardExtraData.updatedUser = user
             if(cardExtraData.updatedUser != cardExtraData.createdUser) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
             return await this.cardExtraRepository.save(cardExtraData)
         }

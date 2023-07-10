@@ -19,10 +19,10 @@ export class BaseEntity {
 
     @ManyToOne(() => UserTable, user => user.id)
     @JoinColumn({ name: 'updated_user_id' })
-    updatedUser: number;
+    updatedUser: UserTable;
 
     @ManyToOne(() => UserTable, user => user.id)
     @JoinColumn({ name: 'created_user_id' })
-    createdUser: number;
+    createdUser: UserTable;
 
 }

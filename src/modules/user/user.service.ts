@@ -56,7 +56,8 @@ export class UserService implements IUserService {
         if (updatedUser) {
             Object.assign(updatedUser, user)
             updatedUser.updatedAt = new Date
-            updatedUser.updatedUser = parseInt(authenticatedUserId)
+            const userData = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
+            updatedUser.updatedUser = userData
             return await this.userRepository.save(updatedUser)
         }
         else {
