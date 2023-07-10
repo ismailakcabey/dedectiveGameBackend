@@ -23,7 +23,7 @@ export class ClueController{
     ):Promise<ClueTable>{
         //@ts-ignore
         const authenticatedUserId = request?.user?.id
-        return this.clueService.createClue(clue,authenticatedUserId)
+        return await this.clueService.createClue(clue,authenticatedUserId)
     }
 
     @Get()

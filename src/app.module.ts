@@ -17,6 +17,10 @@ import { ExpressionTable } from './modules/expression/expression.entity';
 import { ExpressionModule } from './modules/expression/expression.module';
 import { ClueModule } from './modules/clue/clue.module';
 import { ClueTable } from './modules/clue/clue.entity';
+import { CardExtraTable } from './modules/cardExtra/cardExtra.entity';
+import { CardExtraModule } from './modules/cardExtra/cardExtra.module';
+import { MessageTable } from './modules/message/message.entity';
+import { MessageModule } from './modules/message/message.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
@@ -42,7 +46,9 @@ import { ClueTable } from './modules/clue/clue.entity';
           UserTable,
           EventTable,
           ExpressionTable,
-          ClueTable
+          ClueTable,
+          CardExtraTable,
+          MessageTable
         ],
         synchronize: true,
       }),
@@ -66,7 +72,9 @@ import { ClueTable } from './modules/clue/clue.entity';
     AuthModule,
     EventModule,
     ExpressionModule,
-    ClueModule
+    ClueModule,
+    CardExtraModule,
+    MessageModule
   ],
   controllers: [AppController],
   providers: [

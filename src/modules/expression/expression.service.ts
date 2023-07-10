@@ -61,7 +61,7 @@ export class ExpressionService implements IExpressionService{
     }
 
     async updateExpression(id: number, expression: ExpressionDto,authenticatedUserId:string): Promise<ExpressionTable> {
-        const expressionData = await this.expressionRepository.findOne({where:{id:id}})
+        const expressionData = await this.expressionRepository.findOne({where:{id:id},loadRelationIds:true})
         if(expressionData){
             Object.assign(expressionData, expression)
             expressionData.updatedAt = new Date()
