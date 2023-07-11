@@ -19,13 +19,17 @@ export class ClueService implements IClueService {
     ){}
 
     async createClue(clue: ClueDto,authenticatedUserId:string): Promise<ClueTable> {
-        const newClue = await this.clueRepository.create(clue)
+        try {
+            const newClue = await this.clueRepository.create(clue)
         newClue.createdAt = new Date()
         const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
         newClue.createdUser = user
         const filePath = await this.saveImager.imageSaver(clue.imageBase64,newClue.name)
         newClue.imageUrl = filePath
         return await this.clueRepository.save(newClue)
+        } catch (error) {
+            return error
+        }
     }
 
     async findClue(query: FilterQuery): Promise<{ data: ClueTable[]; count: number; }> {

@@ -19,13 +19,17 @@ export class EventService implements IEventService {
     ) { }
 
     async createEvent(event: EventDto,authenticatedUserId:string): Promise<EventTable> {
-        const newEvent = await this.eventRepository.create(event);
+        try {
+            const newEvent = await this.eventRepository.create(event);
         newEvent.createdAt = new Date
         const filePath = await this.saveImager.imageSaver(event.imageBase64, newEvent.name)
         newEvent.imageUrl = filePath;
         const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
         newEvent.createdUser = user
         return await this.eventRepository.save(newEvent);
+        } catch (error) {
+            return error
+        }
     }
 
     async findEvent(query: FilterQuery): Promise<{ data: EventTable[]; count: number; }> {

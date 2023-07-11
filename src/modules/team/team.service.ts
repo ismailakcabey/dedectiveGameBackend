@@ -21,11 +21,15 @@ export class TeamService implements ITeamService {
     ){}
 
     async createTeam(team: TeamDto, authenticatedUserId: string): Promise<TeamTable> {
+        try {
         const newTeam = await this.teamRepository.create(team)
         newTeam.createdAt = new Date()
         const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
         newTeam.createdUser = user
         return await this.teamRepository.save(newTeam)
+        } catch (error) {
+            return error
+        }
     }
 
     async findTeam(query: FilterQuery): Promise<{ data: TeamTable[]; count: number; }> {
@@ -111,4 +115,31 @@ export class TeamService implements ITeamService {
         }
         else throw new NotFoundException("Team not found")
     }
+
+    async isUserInTeam(teamId: number,userId: number): Promise<boolean> {
+        let authority = false
+        const teamData = await this.teamRepository.findOne({where:{id:teamId},relations:['users'],})
+        for (const user of teamData.users){
+            if(user.id == userId){
+                authority = true
+                break;
+            }
+        }
+        return authority
+    }
+
+    async inUserTeams(userId:string){
+        console.log("içeride ", userId)
+        const teams = await this.teamRepository.find({relations:["users"]})
+        let userTeams:TeamTable[] = []
+        teams.map(team =>{
+            team.users.map(user=>{
+                if(user.id == parseInt(userId)){
+                    userTeams.push(team)
+                }
+            })
+        })
+        return userTeams
+    }
+
 }

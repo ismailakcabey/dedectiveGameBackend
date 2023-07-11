@@ -46,6 +46,15 @@ export class TeamController{
         return await this.teamService.findTeam(team)
     }
 
+    @Get('teams/in/user')
+    async findTeamInUser(
+        @Req() request: Request
+    ):Promise<TeamTable[]> {
+        //@ts-ignore
+        const authenticatedUserId = request?.user?.id
+        return await this.teamService.inUserTeams(authenticatedUserId)
+    }
+
     @Get('/excel/export')
     async findTeamExcel(
         @Query() team: FilterQuery,

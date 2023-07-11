@@ -21,13 +21,17 @@ export class ExpressionService implements IExpressionService{
     ){}
 
     async createExpression(expression: ExpressionDto,authenticatedUserId:string): Promise<ExpressionTable> {
-        const newExpression = await this.expressionRepository.create(expression)
+        try {
+            const newExpression = await this.expressionRepository.create(expression)
         newExpression.createdAt = new Date()
         const filePath = await this.saveImager.imageSaver(expression.imageBase64,newExpression.personName)
         newExpression.imageUrl= filePath
         const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
         newExpression.createdUser = user
         return await this.expressionRepository.save(newExpression)
+        } catch (error) {
+            return error
+        }
     }
 
     async findExpression(query: FilterQuery): Promise<{ data: ExpressionTable[]; count: number; }> {

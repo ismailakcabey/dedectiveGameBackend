@@ -17,11 +17,15 @@ export class MessageService implements IMessageService{
     ){}
 
     async createMessage(message: MessageDto, authenticatedUserId: string): Promise<MessageTable> {
-        const newMessage = await this.messageRepository.create(message);
+        try {
+            const newMessage = await this.messageRepository.create(message);
         newMessage.createdAt = new Date()
         const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
         newMessage.createdUser = user
         return await this.messageRepository.save(newMessage);
+        } catch (error) {
+            return error
+        }
     }
 
     async findMessage(query: FilterQuery): Promise<{ data: MessageTable[]; count: number; }> {

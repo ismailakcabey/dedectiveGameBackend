@@ -17,11 +17,15 @@ export class CardExtraService implements ICardExtraInterface{
     ){}
 
     async createCardExtra(cardExtra: CardExtraDto, authenticatedUserId: string): Promise<CardExtraTable> {
-        const newCardExtra = await this.cardExtraRepository.create(cardExtra);
+        try {
+            const newCardExtra = await this.cardExtraRepository.create(cardExtra);
         const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
         newCardExtra.createdUser = user
         newCardExtra.createdAt = new Date()
         return await this.cardExtraRepository.save(newCardExtra)
+        } catch (error) {
+            return error
+        }
     }
 
     async findCardExtra(query: FilterQuery): Promise<{ data: CardExtraTable[]; count: number; }> {
