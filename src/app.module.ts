@@ -23,9 +23,6 @@ import { MessageTable } from './modules/message/message.entity';
 import { MessageModule } from './modules/message/message.module';
 import { TeamModule } from './modules/team/team.module';
 import { TeamTable } from './modules/team/team.entity';
-import { TeamService } from './modules/team/team.service';
-import { SaveExcelMemoryService } from './shared/services/saveExcelToMemory.service';
-import { RedisService } from './shared/services/redis.service';
 import { TeamGateway } from './websockets/team.gateway';
 @Module({
   imports: [

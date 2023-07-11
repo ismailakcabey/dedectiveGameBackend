@@ -21,17 +21,17 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^9.0.0",
+    "@nestjs/common": "^9.4.3",
     "@nestjs/config": "^3.0.0",
-    "@nestjs/core": "^9.0.0",
+    "@nestjs/core": "^9.4.3",
     "@nestjs/jwt": "^10.1.0",
-    "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/platform-express": "^9.4.3",
     "@nestjs/platform-socket.io": "^10.0.5",
     "@nestjs/typeorm": "^10.0.0",
     "@nestjs/websockets": "^10.0.5",
     "@types/ws": "^8.5.5",
     "amqplib": "^0.10.3",
-    "aws-sdk": "^2.1410.0",
+    "aws-sdk": "^2.141.0",
     "cache-manager": "^5.2.3",
     "cache-manager-redis-store": "^3.0.1",
     "class-transformer": "^0.5.1",
@@ -46,7 +46,7 @@
     "typeorm": "^0.3.17",
     "websocket": "^1.0.34",
     "xlsx": "^0.18.5"
-  },
+  },  
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
