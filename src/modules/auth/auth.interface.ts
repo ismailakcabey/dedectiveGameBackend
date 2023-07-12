@@ -1,3 +1,4 @@
+import { UserTable } from "../user/user.entity";
 import { LoginDto } from "./auth.dto";
 
 export interface IAuthService{
@@ -11,4 +12,5 @@ export interface IAuthService{
     verify(createdAt:string):Promise<{
         status:boolean
     }>
+    me(authenticatedUserId:string):Promise<UserTable>
 }

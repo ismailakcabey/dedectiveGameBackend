@@ -1,7 +1,9 @@
-import { Body, Controller,Post, Req, Param, Get} from "@nestjs/common";
+import { Body, Controller,Post, Req, Param, Get, UseGuards} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LoginDto } from "./auth.dto";
 import { Request } from "express";
+import { UserTable } from "../user/user.entity";
+import { AuthGuard } from "./auth.guard";
 
 @Controller('auth')
 export class AuthController {
@@ -18,6 +20,16 @@ export class AuthController {
         token:string
     }>{
         return await this.authService.login(login)
+    }
+
+    @UseGuards(AuthGuard)
+    @Get('me')
+    async me(
+        @Req() req: Request
+    ):Promise<UserTable>{
+        //@ts-ignore
+        const authenticatedUserId = req?.user?.id
+        return await this.authService.me(authenticatedUserId)
     }
 
     @Post('logout')

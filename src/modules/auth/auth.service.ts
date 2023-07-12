@@ -15,6 +15,11 @@ export class AuthService implements IAuthService {
         private readonly jwtService: JwtService
     ) { }
 
+    async me(authenticatedUserId:string):Promise<UserTable>{
+        const user = parseInt(authenticatedUserId)
+        return await this.userRepository.findOne({where:{id:user}})
+    }
+
     async login(login: LoginDto): Promise<{ status: boolean; token: string; }> {
         const loginUser = await this.userRepository.findOne({ where: { email: login.email } });
 
