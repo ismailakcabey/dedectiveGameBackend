@@ -77,6 +77,12 @@ export class ExpressionTable extends BaseEntity{
     })
     imageUrl?: string
 
+    @Column({
+        type: 'varchar',
+        nullable: true
+    })
+    text?: string
+
 
 
     @ManyToOne(() => EventTable, event => event.id)

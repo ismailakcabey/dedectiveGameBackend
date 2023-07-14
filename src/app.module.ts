@@ -24,6 +24,7 @@ import { MessageModule } from './modules/message/message.module';
 import { TeamModule } from './modules/team/team.module';
 import { TeamTable } from './modules/team/team.entity';
 import { TeamGateway } from './websockets/team.gateway';
+import { ReportModule } from './modules/report/report.module';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
@@ -80,6 +81,7 @@ import { TeamGateway } from './websockets/team.gateway';
     CardExtraModule,
     MessageModule,
     TeamModule,
+    ReportModule,
     TypeOrmModule.forFeature([TeamTable]),
     TypeOrmModule.forFeature([UserTable]),
   ],

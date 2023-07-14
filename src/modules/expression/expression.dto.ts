@@ -61,6 +61,10 @@ export class ExpressionDto {
     imageUrl?: string;
 
     @IsOptional()
+    @IsString()
+    text?: string;
+
+    @IsOptional()
     @IsNumber()
     event?: EventTable;
 
