@@ -7,9 +7,10 @@ import { ClueTable } from "../clue/clue.entity";
 import { CardExtraTable } from "../cardExtra/cardExtra.entity";
 import { MessageTable } from "../message/message.entity";
 import { ExpressionTable } from "../expression/expression.entity";
+import { IReportService } from "./report.interface";
 
 @Injectable()
-export class ReportsService {
+export class ReportsService implements IReportService {
     constructor(
         @InjectRepository(EventTable) private readonly eventRepository: Repository<EventTable>,
         @InjectRepository(UserTable) private readonly userRepository: Repository<UserTable>,
