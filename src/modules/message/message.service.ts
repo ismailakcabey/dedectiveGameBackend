@@ -63,7 +63,7 @@ export class MessageService implements IMessageService{
     }
 
     async updateMessage(id: number, message: MessageDto, authenticatedUserId: string): Promise<MessageTable> {
-        const messageData = await this.messageRepository.findOne({where:{id:id},loadRelationIds:true})
+        const messageData = await this.messageRepository.findOne({where:{id:id},relations:["createdUser","updatedUser"] })
         if(message == null){
             throw new NotFoundException("Message not found")
         }
@@ -72,7 +72,7 @@ export class MessageService implements IMessageService{
             const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
             messageData.updatedUser= user
             messageData.updatedAt = new Date()
-            if(messageData.createdUser != messageData.updatedUser) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
+            if(messageData.createdUser.id != messageData.updatedUser.id) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
             return await this.messageRepository.save(messageData)
         }
     }

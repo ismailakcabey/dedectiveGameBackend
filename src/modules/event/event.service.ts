@@ -53,13 +53,13 @@ export class EventService implements IEventService {
     }
 
     async updateEvent(event: EventDto, id: number,authenticatedUserId:string): Promise<EventTable> {
-        const eventData = await this.eventRepository.findOne({ where: { id: id } })
+        const eventData = await this.eventRepository.findOne({ where: { id: id },relations:["createdUser","updatedUser"] })
         if (eventData) {
             Object.assign(eventData, event)
             eventData.updatedAt = new Date
             const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
             eventData.updatedUser = user
-            if(eventData.updatedUser != eventData.createdUser) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
+            if(eventData.updatedUser.id != eventData.createdUser.id) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
             const newEvent = await this.eventRepository.save(eventData)
             return newEvent
         }

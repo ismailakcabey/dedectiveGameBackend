@@ -23,5 +23,9 @@ export class EventDto {
     @IsString()
     news?: string;
 
+    @IsOptional()
+    @IsString()
+    realHistory?: string;
+
 
 }

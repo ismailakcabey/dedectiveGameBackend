@@ -65,13 +65,13 @@ export class ClueService implements IClueService {
     }
 
     async updateClue(id: number, clue: ClueDto,authenticatedUserId:string): Promise<ClueTable> {
-        const clueData = await this.clueRepository.findOne({where:{id:id},loadRelationIds:true})
+        const clueData = await this.clueRepository.findOne({where:{id:id},relations:["createdUser","updatedUser"] })
         if(clueData){
             Object.assign(clueData, clue)
             clueData.updatedAt = new Date()
             const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
             clueData.updatedUser = user
-            if(clueData.updatedUser != clueData.createdUser) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
+            if(clueData.updatedUser.id != clueData.createdUser.id) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
             return await this.clueRepository.save(clueData)
         }
         else throw new NotFoundException("Clue not found")

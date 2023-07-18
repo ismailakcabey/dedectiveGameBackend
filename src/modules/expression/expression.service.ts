@@ -68,13 +68,13 @@ export class ExpressionService implements IExpressionService{
     }
 
     async updateExpression(id: number, expression: ExpressionDto,authenticatedUserId:string): Promise<ExpressionTable> {
-        const expressionData = await this.expressionRepository.findOne({where:{id:id},loadRelationIds:true})
+        const expressionData = await this.expressionRepository.findOne({where:{id:id},relations:["createdUser","updatedUser"] })
         if(expressionData){
             Object.assign(expressionData, expression)
             expressionData.updatedAt = new Date()
             const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
             expressionData.updatedUser = user
-            if(expressionData.updatedUser != expressionData.createdUser) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
+            if(expressionData.createdUser.id != expressionData.updatedUser.id) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
             return await this.expressionRepository.save(expressionData)
         }
         else throw new NotFoundException("Expression not found")

@@ -63,7 +63,7 @@ export class CardExtraService implements ICardExtraInterface{
     }
 
     async updateCardExtra(id: number, cardExtra: CardExtraDto, authenticatedUserId: string): Promise<CardExtraTable> {
-        const cardExtraData = await this.cardExtraRepository.findOne({where: {id: id},loadRelationIds:true})
+        const cardExtraData = await this.cardExtraRepository.findOne({where: {id: id},relations:["createdUser","updatedUser"] })
         if(cardExtra == null){
             throw new NotFoundException("CardExtra not found")
         }
@@ -72,7 +72,7 @@ export class CardExtraService implements ICardExtraInterface{
             cardExtraData.updatedAt = new Date()
             const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
             cardExtraData.updatedUser = user
-            if(cardExtraData.updatedUser != cardExtraData.createdUser) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
+            if(cardExtraData.updatedUser.id != cardExtraData.createdUser.id) throw new UnAuthGameUpdate("this user is unauthorized in this game ")
             return await this.cardExtraRepository.save(cardExtraData)
         }
     }

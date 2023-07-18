@@ -35,6 +35,12 @@ export class EventTable extends BaseEntity{
     })
     news: string
 
+    @Column({
+        type: 'varchar',
+        nullable: true
+    })
+    realHistory: string
+
 
 
 }
