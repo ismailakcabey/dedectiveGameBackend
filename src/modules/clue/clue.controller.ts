@@ -43,6 +43,13 @@ export class ClueController{
         return await this.clueService.findClueById(id)
     }
 
+    @Get('event/:id')
+    async findClueByIdEvent(
+        @Param('id') id:number
+    ):Promise<ClueTable[]>{
+        return await this.clueService.findClueByIdEvent(id)
+    }
+
     @Delete(':id')
     async deleteClue(
         @Param('id') id:number

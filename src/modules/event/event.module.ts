@@ -18,7 +18,8 @@ import { SaveImageMemoryService } from "src/shared/services/saveImageToMemory.se
         EventService,
         SaveImageMemoryService
     ],
-    exports:[]
+    exports:[
+    ]
 })
 
 export class EventModule{}

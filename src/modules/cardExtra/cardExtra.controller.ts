@@ -45,6 +45,13 @@ export class CardExtraController{
         return await this.cardExtraService.fincCardExtraById(id)
     }
 
+    @Get('event/:id')
+    async findCardExtraByIdEvent(
+        @Param('id') id:number
+    ):Promise<CardExtraTable[]>{
+        return await this.cardExtraService.fincCardExtraByIdEvent(id)
+    }
+
     @Delete(':id')
     async deleteCardExtra(
         @Param('id') id:number

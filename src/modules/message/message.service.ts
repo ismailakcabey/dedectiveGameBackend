@@ -7,6 +7,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { UnAuthGameUpdate } from "src/shared/exception/unAtuhGameUpdate.exception";
 import { UserTable } from "../user/user.entity";
+import { EventService } from "../event/event.service";
 
 @Injectable()
 export class MessageService implements IMessageService{
@@ -14,6 +15,7 @@ export class MessageService implements IMessageService{
     constructor(
         @InjectRepository(MessageTable) private readonly messageRepository: Repository<MessageTable>,
         @InjectRepository(UserTable) private readonly userRepository: Repository<UserTable>,
+        private readonly eventService: EventService
     ){}
 
     async createMessage(message: MessageDto, authenticatedUserId: string): Promise<MessageTable> {
@@ -49,6 +51,12 @@ export class MessageService implements IMessageService{
         else{
             return message
         }
+    }
+
+    async findMessageByIdEvent(id: number): Promise<MessageTable[]> {
+        const event = await this.eventService.findEventById(id)
+        const message = await this.messageRepository.find({where:{event:event}})
+        return message
     }
 
     async deleteMessage(id: number): Promise<boolean> {

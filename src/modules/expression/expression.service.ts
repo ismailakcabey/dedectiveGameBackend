@@ -8,6 +8,7 @@ import { FindManyOptions, Repository } from "typeorm";
 import { SaveImageMemoryService } from "src/shared/services/saveImageToMemory.service";
 import { UnAuthGameUpdate } from "src/shared/exception/unAtuhGameUpdate.exception";
 import { UserTable } from "../user/user.entity";
+import { EventService } from "../event/event.service";
 
 
 @Injectable()
@@ -17,6 +18,7 @@ export class ExpressionService implements IExpressionService{
     constructor(
         @InjectRepository(ExpressionTable) private readonly expressionRepository:Repository<ExpressionTable>,
         @InjectRepository(UserTable) private readonly userRepository: Repository<UserTable>,
+        private readonly eventService: EventService,
         private readonly saveImager:SaveImageMemoryService
     ){}
 
@@ -55,6 +57,13 @@ export class ExpressionService implements IExpressionService{
         }else{
         return expression
         }
+        
+    }
+
+    async findExpressionByIdEvent(id: number): Promise<ExpressionTable[]> {
+        const event = await this.eventService.findEventById(id)
+        const expression = await this.expressionRepository.find({where:{event:event}})
+        return expression
         
     }
 

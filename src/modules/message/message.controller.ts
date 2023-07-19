@@ -44,6 +44,13 @@ export class MessageController{
         return await this.messageService.findMessageById(id)
     }
 
+    @Get('event/:id')
+    async findMessageByIdEvent(
+        @Param('id') id:number
+    ):Promise<MessageTable[]>{
+        return await this.messageService.findMessageByIdEvent(id)
+    }
+
     @Delete(':id')
     async deleteMessageById(
         @Param('id') id:number

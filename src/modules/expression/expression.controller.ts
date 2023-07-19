@@ -44,6 +44,13 @@ export class ExpressionController{
         return await this.expressionService.findExpressionById(id)
     }
 
+    @Get('event/:id')
+    async findExpressionsByIdEvent(
+        @Param('id') id:number
+    ):Promise<ExpressionTable[]>{
+        return await this.expressionService.findExpressionByIdEvent(id)
+    }
+
     @Delete(':id')
     async deleteExpression(
         @Param('id') id:number

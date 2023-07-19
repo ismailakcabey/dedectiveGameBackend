@@ -5,17 +5,22 @@ import { UserTable } from "../user/user.entity";
 import { CardExtraTable } from "./cardExtra.entity";
 import { CardExtraController } from "./cardExtra.controller";
 import { CardExtraService } from "./cardExtra.service";
+import { EventTable } from "../event/event.entity";
+import { EventService } from "../event/event.service";
 
 @Module({
     imports:[
         TypeOrmModule.forFeature([CardExtraTable]),
         TypeOrmModule.forFeature([UserTable]),
+        TypeOrmModule.forFeature([EventTable]),
     ],
     controllers:[
         CardExtraController
     ],
     providers:[
-        CardExtraService
+        CardExtraService,
+        EventService,
+        SaveImageMemoryService
     ],
     exports:[]
 })

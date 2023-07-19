@@ -7,6 +7,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Repository } from "typeorm";
 import { UnAuthGameUpdate } from "src/shared/exception/unAtuhGameUpdate.exception";
 import { UserTable } from "../user/user.entity";
+import { EventService } from "../event/event.service";
 
 @Injectable()
 export class CardExtraService implements ICardExtraInterface{
@@ -14,6 +15,7 @@ export class CardExtraService implements ICardExtraInterface{
     constructor(
         @InjectRepository(CardExtraTable) private readonly cardExtraRepository: Repository<CardExtraTable>,
         @InjectRepository(UserTable) private readonly userRepository: Repository<UserTable>,
+        private readonly eventService: EventService
     ){}
 
     async createCardExtra(cardExtra: CardExtraDto, authenticatedUserId: string): Promise<CardExtraTable> {
@@ -49,6 +51,12 @@ export class CardExtraService implements ICardExtraInterface{
         else{
             return cardExtra
         }
+    }
+
+    async fincCardExtraByIdEvent(id: number): Promise<CardExtraTable[]> {
+        const event = await this.eventService.findEventById(id)
+        const cardExtra = await this.cardExtraRepository.find({where: {event: event}})
+        return cardExtra
     }
 
     async deleteCardExtra(id: number): Promise<boolean> {

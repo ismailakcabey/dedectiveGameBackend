@@ -8,6 +8,7 @@ import { FindManyOptions, Repository } from "typeorm";
 import { SaveImageMemoryService } from "src/shared/services/saveImageToMemory.service";
 import { UnAuthGameUpdate } from "src/shared/exception/unAtuhGameUpdate.exception";
 import { UserTable } from "../user/user.entity";
+import { EventService } from "../event/event.service";
 
 @Injectable()
 export class ClueService implements IClueService {
@@ -15,6 +16,7 @@ export class ClueService implements IClueService {
     constructor(
         @InjectRepository(ClueTable) private readonly clueRepository: Repository<ClueTable>,
         @InjectRepository(UserTable) private readonly userRepository: Repository<UserTable>,
+        private readonly eventService: EventService,
         private readonly saveImager:SaveImageMemoryService
     ){}
 
@@ -28,6 +30,7 @@ export class ClueService implements IClueService {
         newClue.imageUrl = filePath
         return await this.clueRepository.save(newClue)
         } catch (error) {
+            console.log(error)
             return error
         }
     }
@@ -47,6 +50,17 @@ export class ClueService implements IClueService {
 
     async findClueById(id: number): Promise<ClueTable> {
         const clue = await this.clueRepository.findOne({where:{id:id}})
+        if(clue == null){
+            throw new NotFoundException("Clue not found")
+        } 
+        else {
+            return clue
+        }
+    }
+
+    async findClueByIdEvent(id: number): Promise<ClueTable[]> {
+        const event = await this.eventService.findEventById(id)
+        const clue = await this.clueRepository.find({where:{event:event}})
         if(clue == null){
             throw new NotFoundException("Clue not found")
         } 
