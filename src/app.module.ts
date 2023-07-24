@@ -63,8 +63,6 @@ import { ReportModule } from './modules/report/report.module';
       isGlobal: true,
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        host:configService.get('REDIS_HOST'),
-        port:configService.get<number>('REDIS_PORT'),
         isGlobal: true,
         store: (await redisStore({
           url: configService.get('REDIS_URL'),
