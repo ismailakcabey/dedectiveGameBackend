@@ -37,15 +37,9 @@ import { ReportModule } from './modules/report/report.module';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (
-        configService: ConfigService
-      )=>({
+      useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: +configService.get<number>('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
+        url: configService.get('POSTGRES_URL'),
         entities: [
           UserTable,
           EventTable,
@@ -53,11 +47,11 @@ import { ReportModule } from './modules/report/report.module';
           ClueTable,
           CardExtraTable,
           MessageTable,
-          TeamTable
+          TeamTable,
         ],
         synchronize: true,
       }),
-      inject: [ConfigService]
+      inject: [ConfigService],
     }),
     CacheModule.registerAsync({
       isGlobal: true,
