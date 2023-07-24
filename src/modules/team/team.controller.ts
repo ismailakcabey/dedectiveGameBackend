@@ -26,9 +26,9 @@ export class TeamController{
         return await this.teamService.createTeam(team, authenticatedUserId)
     }
 
-    @Post('join/:id')
+    @Post('join')
     async joinTeam(
-        @Param('id') id:number,
+        @Body('id') id:number,
         @Req() request: Request
     ):Promise<boolean>{
         //@ts-ignore
