@@ -70,13 +70,13 @@ export class TeamService implements ITeamService {
     }
 
     async updateTeam(id: number, team: TeamDto, authenticatedUserId: string): Promise<TeamTable> {
-        const teamData = await this.teamRepository.findOne({where:{id:id},loadRelationIds:true})
+        const teamData = await this.teamRepository.findOne({where:{id:id},relations:["createdUser","updatedUser"] })
         if(teamData){
             Object.assign(teamData, team)
             teamData.updatedAt = new Date()
             const user = await this.userRepository.findOne({where: {id: parseInt(authenticatedUserId)}})
             teamData.updatedUser = user
-            if(teamData.updatedUser != teamData.createdUser) throw new UnAuthGameUpdate("this user is unauthorized in this team ")
+            if(teamData.updatedUser?.id != teamData.createdUser?.id) throw new UnAuthGameUpdate("this user is unauthorized in this team ")
             return await this.teamRepository.save(teamData)
         }
         else throw new NotFoundException("Team not found")
