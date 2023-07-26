@@ -7,7 +7,9 @@ import { Roles } from "../auth/roles.decorator";
 import { Role } from "../user/user.enum";
 import { FilterQuery } from "src/shared/dtos/query.dto";
 import { Request } from 'express'
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('Event')
 @UseGuards(AuthGuard)
 @Roles(Role.ADMIN,Role.USER)
 @Controller('event')

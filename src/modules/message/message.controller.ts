@@ -7,7 +7,9 @@ import { MessageDto } from "./message.dto";
 import { Request } from "express";
 import { MessageTable } from "./message.entity";
 import { FilterQuery } from "src/shared/dtos/query.dto";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('Message')
 @UseGuards(AuthGuard)
 @Roles(Role.ADMIN,Role.USER)
 @Controller('message')

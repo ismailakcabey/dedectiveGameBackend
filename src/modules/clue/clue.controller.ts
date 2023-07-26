@@ -7,6 +7,9 @@ import { ClueDto } from "./clue.dto";
 import { ClueTable } from "./clue.entity";
 import { FilterQuery } from "src/shared/dtos/query.dto";
 import { Request } from 'express'
+import { ApiTags } from "@nestjs/swagger";
+
+@ApiTags('Clue')
 @UseGuards(AuthGuard)
 @Roles(Role.ADMIN, Role.USER)
 @Controller('clue')

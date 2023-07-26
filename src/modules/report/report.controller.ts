@@ -3,7 +3,9 @@ import { Role } from "../user/user.enum";
 import { AuthGuard } from "../auth/auth.guard";
 import { Roles } from "../auth/roles.decorator";
 import { ReportsService } from "./report.service";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('Report')
 @UseGuards(AuthGuard)
 @Roles(Role.ADMIN,Role.USER)
 @Controller('report')

@@ -7,8 +7,10 @@ import { CardExtraDto } from "./cardExtra.dto";
 import { CardExtraTable } from "./cardExtra.entity";
 import { Request } from 'express'
 import { FilterQuery } from "src/shared/dtos/query.dto";
+import { ApiTags } from "@nestjs/swagger";
 
 
+@ApiTags('CardExtra')
 @UseGuards(AuthGuard)
 @Roles(Role.ADMIN,Role.USER)
 @Controller('card-extra')

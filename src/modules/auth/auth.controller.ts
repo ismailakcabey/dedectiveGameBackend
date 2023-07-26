@@ -4,7 +4,9 @@ import { LoginDto } from "./auth.dto";
 import { Request } from "express";
 import { UserTable } from "../user/user.entity";
 import { AuthGuard } from "./auth.guard";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
 

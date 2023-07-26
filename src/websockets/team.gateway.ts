@@ -1,4 +1,4 @@
-import { OnModuleInit } from '@nestjs/common';
+import { Logger, OnModuleInit } from '@nestjs/common';
 import { WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, MessageBody } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
@@ -10,7 +10,7 @@ export class TeamGateway implements OnModuleInit {
       }
 
       afterInit(server: Server) {
-        console.log('WebSocket server initialized');
+        Logger.log('WebSocket server initialized');
       }
   
       handleConnection(client: Socket) {

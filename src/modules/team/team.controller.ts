@@ -7,7 +7,10 @@ import { Request } from 'express'
 import { TeamDto } from "./team.dto";
 import { TeamTable } from "./team.entity";
 import { FilterQuery } from "src/shared/dtos/query.dto";
+import { ApiTags } from "@nestjs/swagger";
+
 @UseGuards(AuthGuard)
+@ApiTags('Team')
 @Roles(Role.ADMIN,Role.USER)
 @Controller('team')
 export class TeamController{

@@ -7,7 +7,9 @@ import { ExpressionDto } from "./expression.dto";
 import { ExpressionTable } from "./expression.entity";
 import { FilterQuery } from "src/shared/dtos/query.dto";
 import { Request } from 'express'
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('Expression')
 @UseGuards(AuthGuard)
 @Roles(Role.ADMIN,Role.USER)
 @Controller('expression')
