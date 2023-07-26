@@ -1,8 +1,9 @@
-version: '3'
+version: '1.0'
 services:
   dedective-game-backend:
     container_name: dedective-game-backend
     build:
-      dockerfile: Dockerfile              # Docker imajınızın oluşturulacağı Docker dosyasının adı
+      dockerfile: Dockerfile
+      context: .
     ports:
       - "3000:3000"  
