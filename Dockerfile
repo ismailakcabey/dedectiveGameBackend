@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:20.4
 
 # Create app directory, this is in out container
 WORKDIR /ismail/src/app
